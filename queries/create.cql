@@ -174,7 +174,7 @@ RETURN n_start, rel1, jn, rel2, n_end;
 // Total transit time/ shipment 
 MATCH (s:Shipment {id: 1})<-[r:HAVING]-(jn:JourneyNode)
 MATCH (n_start)-[rel1:START]->(jn)-[rel2:END]->(n_end:Node)
-RETURN n_start, rel1, jn, rel2, n_end;
+RETURN SUM(jn.transit_time);
 
 // 14: Top 2 performing routes with driver name and vehicle_number with least transit time:
 MATCH (n1:Node)-[rel1:START]-(jn:JourneyNode)-[rel2: END]->(n2:Node)
