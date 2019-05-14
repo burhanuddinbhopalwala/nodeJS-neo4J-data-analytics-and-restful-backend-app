@@ -1,5 +1,5 @@
 // 0: DDL: 
-
+:server switch success
 
 ////////////////////DML////////////////////////
 // 1: Operators: 

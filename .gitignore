@@ -1,5 +1,6 @@
+config/*.js
 dump/*.sql
-db/schema.rb
+node_modules/
 
 *.swp
 *.out 
@@ -12,3 +13,4 @@ nohup.out
 .ruby-gemset
 .ruby-version
 .byebug_history
+package-lock.json

@@ -1,0 +1,25 @@
+{
+  "name": "neo4j_app",
+  "version": "1.0.0",
+  "description": "neo4j_app implementation",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/burhanuddinbhopalwala/neo4J_data_analytics_and_implementation.git"
+  },
+  "author": "Burhanuddin Bhopalwala",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/burhanuddinbhopalwala/neo4J_data_analytics_and_implementation/issues"
+  },
+  "homepage": "https://github.com/burhanuddinbhopalwala/neo4J_data_analytics_and_implementation#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.16.4",
+    "neo4j-driver": "^1.7.4"
+  }
+}
