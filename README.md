@@ -1,2 +1,3 @@
-# neo4J_data_analytics_and_implementation
-Implementation and data analytics using neo4J noSQL graph database. 
+# neo4J_data_analytics_and_restful_app
+Data analytics with restful implementation using neo4J noSQL graph database.
+
