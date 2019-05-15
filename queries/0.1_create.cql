@@ -4,8 +4,12 @@
 //////////////////////////////////////////////////////////////////////
 
 // 2: CREATING NODES:
-// 2.1: CREATING HUB NODES
+// 2.1: CREATING HUB NODES:
+// MERGE == CREATE IF NOT EXISTS:
 MERGE (n1:Node {name: "n1", id: 1, location_code: "lc1"})
+ON CREATE SET n1.createdAt = timestamp(), n1.location_update_count = 0
+ON MATCH SET n1.updatedAt = timestamp(), n1.location_update_count = (n1.location_update_count + 1);
+
 MERGE (n2:Node {name: "n2", id: 2, location_code: "lc2"})
 MERGE (n3:Node {name: "n3", id: 3, location_code: "lc3"})
 MERGE (n4:Node {name: "n4", id: 4, location_code: "lc4"})
@@ -79,24 +83,73 @@ SET node.name = "n2", node:Hub; // Setting new label
 MATCH (node:Hub {id: 5})
 REMOVE node.position, node:Hub; // Removing new label
 
-// NOT VALID: As dynamic value not allowed inside SET
+// NOT VALID: AS DYNAMIC VALUE NOT ALLOWED INSIDE SET:
 MATCH (p:Person)-[:HAS_CONTACT]->(c:Contact)
 SET p.contacts = COUNT(c)
 RETURN p;
 
-// SOLN: Using WITH clause to break the query into 2 parts
+// SOLN: USING WITH CLAUSE TO BREAK THE QUERY INTO 2 PARTS:
 MATCH (p:Person)-[:HAS_CONTACT]->(c:Contact)
 WITH p, p.contacts = COUNT(c) AS total_contacts
 WHERE total_contacts > 10
 SET p.contacts = total_contacts, p:Social
 RETURN p;
 
-// UPDATING RELATION = DEL OLD RELATION + MERGE NEW RELATION
+// UPDATING RELATION = DEL OLD RELATION + MERGE NEW RELATION:
 MATCH (p1:Person {id: 1})-[old_rel:OLD_CONTACT]->(p2:Person {id: 2})
 SET old_rel.type = "feriends"
 MERGE (p1:Person {id: 1})-[new_rel:HAS_CONTACT]->(p2:Person {id: 2})
 SET new_rel = old_rel
 DELETE old_rel
 RETURN p1, p2;
+/////////////////////////////////////////////////////////////////
+
+// 4: WORKING WITH NULLS: 
+WITH ["FIRST", "SECOND", "THIRD"] AS my_list
+RETURN my_list[1], my_list[3]; // SECOND null
+
+WITH  (NULL OR true) AS result1, (NULL OR false) AS result2
+RETURN result1, result2; //true null
+
+WITH  (NULL AND true) AS result1, (NULL AND false) AS result2
+RETURN result1, result2; //null false
+
+WITH (1 IN [1, NULL]) AS result1, (NULL IN [1, NULL]) AS result2, (NULL + [1]) AS result3, 
+    ([NULL] + [1, NULL]) as result4
+RETURN result1, result2, result3, result4 // true null null [null, 1, null]
+// Add as list for result4, if value may be null, else lead to result 3
+
+// COMPARISON WITH NULL, SAME SQL PROBLEM:
+WITH (NULL = NULL) AS result1, (NULL <> NULL) AS result2
+RETURN result1, result2; // null null
+
+// SOLN, SAME SOLUTION AS IN SQL:
+WITH (NULL IS NULL) AS result1, (NULL IS NOT NULL) AS result2
+RETURN result1, result2;
+
+// FOR CUTS OUT THE NULL, FROM LIST:
+WITH ([NULL, 1] + [2, NULL]) as results
+RETURN [result IN results WHERE result IS NOT NULL | result];
+/////////////////////////////////////////////////////////////////
+
+// 5: WORKING WITH PATH (SERIES OF CONNECTED (VIA NTH DEGREE RELATIONSHIPS) NODES):
+MERGE (p1:Person)->[:HAS_CONTACT]->(p2:Person);
+MATCH path = ((p1:Person)-[:HAS_CONTACT*1..10]->(p2:Person)) // min..max
+WHERE p1 <> p2
+RETURN p1, nodes(path) AS path_nodes, relationships(path) AS path_rels, path, p2
+LIMIT 25; // Must to avoid the infinite loop
+
+// FOR PATH LENGTH: 
+MATCH path = ((p1:Person)-[:HAS_CONTACT*1..10]->(p2:Person)) // min..max
+WHERE p1 <> p2
+RETURN length(path) AS path_length
+LIMIT 25; // Must to avoid the infinite loop
+
+// SHORTEST PATH: 
+MATCH path = allShortestPath((p1:Person)-[*..10]->(p2:Person)) // ..max, needed for SP's
+WHERE p1 <> p2
+RETURN p1, path, p2, length(path) AS path_length
+ORDER BY path_length
+LIMIT 1;
 /////////////////////////////////////////////////////////////////
 

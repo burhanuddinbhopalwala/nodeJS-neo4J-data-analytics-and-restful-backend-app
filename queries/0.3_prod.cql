@@ -1,6 +1,3 @@
-
-/////////////////////////////////////////////////////////////////////
-
 // 1: FINDING A JOURNEY: 
 MATCH (j:Journey {id: 1})-[:FROM]->(jn1:JourneyNode)
 MATCH (j)-[:TO]->(jn2:JourneyNode)

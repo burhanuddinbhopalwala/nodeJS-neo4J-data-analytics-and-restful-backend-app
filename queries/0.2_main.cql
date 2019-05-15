@@ -1,4 +1,4 @@
-// 0: 
+// 0: lssayers@gmail.com
 :help cypher
 
 // RETURNING NEO4J SERVER CREDENTIALS:
@@ -8,8 +8,8 @@
 MATCH (anything)
 RETURN anything
 LIMIT 25;
+//////////////////////////////////////////////////////////////////////
 
-////////////////////DML////////////////////////
 // 1: INTRODUCTION: 
 
   // OPERATORS: 
@@ -25,6 +25,7 @@ LIMIT 25;
   WHERE a <> c
   RETURN a.name, b.name , c.name 
   LIMIT 10;
+//////////////////////////////////////////////////////////////////////
 
 // 2: MATCH(||) + OPTIONAL MATCH (IF FOUND ELSE NULL) + FILTERING: 
   MATCH (creation: Person)-[rel:CODED_BY | REVIEWED_BY]->(coder: Person) 
@@ -49,6 +50,7 @@ LIMIT 25;
   MATCH (movie: Movie)
   WHERE movie.title =~ "(?i).+The .*" // Case insensitive + atleast one character before "the"
   return movie.title;
+//////////////////////////////////////////////////////////////////////
 
 // 4: AGGREGATIONS (COUNT, AVG, SUM, MIN, MAX): 
   MATCH (director: Person {name: "John Doe"})-[rel: DIRECTED]->(movie: Movie)
@@ -57,6 +59,7 @@ LIMIT 25;
   MATCH (director: Person {name: "John Doe"})-[role: ACTED_IN]->(movie: Movie)
   RETURN AVG(role.earnings) AS avg_earnings, SUM(role.earnings) AS total_earnings;
   // Similarly for SUM, MIN, MAX
+//////////////////////////////////////////////////////////////////////
 
 // 5: BUILTIN FUNCTIONS:
   RETURN lower(trim(toString("A demo string"))), lower(trim(toString(11.5))), lower(trim(toString(true)))
@@ -70,4 +73,4 @@ LIMIT 25;
   RETURN upper(actor.name) AS actor_name, round(SUM(role.earnings)) AS total_earnings
   ORDER BY total_earnings DESC
   LIMIT 1; // Top earning actor 
-  
+//////////////////////////////////////////////////////////////////////
