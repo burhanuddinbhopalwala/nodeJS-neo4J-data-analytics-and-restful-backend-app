@@ -1,17 +1,32 @@
-// 3: ALL RELATIONSHIPS 
-MATCH (a: Consigner {name: 'TUBES'})-[r1: FROM]->(b: Trip)-[r2: TO]->(c:Consignee)
-RETURN a, r1, b, AVG(b.transit_time) AS avg_transit_hours, AVG(b.stoppage_time) AS avg_stoppage_hours, r2, c 
-ORDER BY avg_transit_hours desc;
 
-// 4: GROUP BY CONSIGNER_NAME AND CONSIGNEE_NAME
-MATCH (a: Consigner {name: 'TUBES'})-[r1: FROM]->(b: Trip)-[r2: TO]->(c:Consignee)
-RETURN a, AVG(b.transit_time) AS avg_transit_hours, AVG(b.stoppage_time) AS avg_stoppage_hours, c 
-ORDER BY avg_transit_hours desc;
+/////////////////////////////////////////////////////////////////////
 
-// 5: MULTI JOIN EXAMPLE DEMO
-MATCH (a:ConsignerTrip {consignerCode: "APML", origin: "DDSK", destination: "KOTA"})-[rel1 :TRUCKS]->(b:Truck {isActive: "1"})-[rel2: TRUCKERS]->(c:Trucker) 
-RETURN AVG(a.loadingOutTime - a.loadingInTime) AS avg_loading_time, AVG(a.unloadingOutTime - a.unloadingInTime) AS avg_unloading_time, 
-AVG(c.unloadingInTime - c.loadingOutTime) AS avg_transit_time ORDER BY avg_transit_time DESC LIMIT 3;
+// 1: FINDING A JOURNEY: 
+MATCH (j:Journey {id: 1})-[:FROM]->(jn1:JourneyNode)
+MATCH (j)-[:TO]->(jn2:JourneyNode)
+MATCH path =(n_start:Node)-[:START]->(jn1)-[*]->(jn2)-[:END]->(n_end:Node)
 
-MATCH (a:ConsignerTrip {consignerCode: "APML"})-[rel1 :TRUCKS]->(b:Truck {isActive: "1"})-[rel2: TRUCKERS]->
-(c:Trucker {companyName: "APML Market Vehicle"}) return a, b, c;
+WITH NODES(path) AS nodes
+UNWIND nodes AS jns
+WITH jns
+WHERE "JourneyNode" IN LABELS(jns)
+
+MATCH path2 = (jns)-[:HAVING]->()
+MATCH path1 = ()-[:START]->(jns)-[:END]->()
+RETURN path1, path2;
+
+// 2: FOR A PARTICULAR SHIPMENT PATH, TOTAL TRANSIT TIME ACROSS MULTIPLE JOURNIES: 
+MATCH (s:Shipment {id: 1})<-[r:HAVING]-(jn:JourneyNode)
+MATCH (n_start)-[rel1:START]->(jn)-[rel2:END]->(n_end:Node)
+RETURN n_start, rel1, jn, rel2, n_end;
+
+// TOTAL TRANSIT TIME/ SHIPMENT:
+MATCH (s:Shipment {id: 1})<-[r:HAVING]-(jn:JourneyNode)
+MATCH (n_start)-[rel1:START]->(jn)-[rel2:END]->(n_end:Node)
+RETURN SUM(jn.transit_time);
+
+// 3: TOP 2 PERFORMING ROUTES WITH DRIVER NAME AND VEHICLE_NUMBER WITH LEAST TRANSIT TIME:
+MATCH (n1:Node)-[rel1:START]-(jn:JourneyNode)-[rel2: END]->(n2:Node)
+WHERE n1 <> n2
+RETURN n1, rel1, jn, rel2, n2 ORDER BY (jn.transit_time) ASC LIMIT 2;
+////////////////////////////////////////////////////////////////////////
