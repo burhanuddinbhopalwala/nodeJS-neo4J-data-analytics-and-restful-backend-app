@@ -1,5 +1,5 @@
 // 1: DELETE EVERYTHING:
-// MATCH (node) DETACH DELETE node;
+MATCH (node) DETACH DELETE node;
 // MATCH (node)-[rel]->(any_node2) DELETE rel, node, any_node2;
 //////////////////////////////////////////////////////////////////////
 
@@ -8,7 +8,7 @@
 // MERGE == CREATE IF NOT EXISTS:
 MERGE (n1:Node {name: "n1", id: 1, location_code: "lc1"})
 ON CREATE SET n1.createdAt = timestamp(), n1.location_update_count = 0
-ON MATCH SET n1.updatedAt = timestamp(), n1.location_update_count = (n1.location_update_count + 1);
+ON MATCH SET n1.updatedAt = timestamp(), n1.location_update_count = (n1.location_update_count + 1)
 
 MERGE (n2:Node {name: "n2", id: 2, location_code: "lc2"})
 MERGE (n3:Node {name: "n3", id: 3, location_code: "lc3"})
@@ -73,7 +73,7 @@ MERGE (j2)-[:FROM {start_node_id: 1, end_node_id: 3, seq_no: 1}]->(j21)
 MERGE (j2)-[:TO {start_node_id: 3, end_node_id: 5, seq_no: 2}]->(j22)
 
 MERGE (j3)-[:FROM {start_node_id: 2, end_node_id: 7, seq_no: 1}]->(j31)
-MERGE (j3)-[:TO {start_node_id: 2, end_node_id: 7, seq_no: 1}]->(j31)
+MERGE (j3)-[:TO {start_node_id: 2, end_node_id: 7, seq_no: 1}]->(j31);
 //////////////////////////////////////////////////////////////////////
 
 // 3: UPDATING NODES/ RELATIOSHIPS:
@@ -133,23 +133,27 @@ RETURN [result IN results WHERE result IS NOT NULL | result];
 /////////////////////////////////////////////////////////////////
 
 // 5: WORKING WITH PATH (SERIES OF CONNECTED (VIA NTH DEGREE RELATIONSHIPS) NODES):
-MERGE (p1:Person)->[:HAS_CONTACT]->(p2:Person);
+// NOTE: MERGE - WITH -> MATCH
+MERGE (p1:Person {name: "A"})-[:HAS_CONTACT {via: "XYZ"}]->(p2:Person {name: "B"})
+WITH p1, p2
 MATCH path = ((p1:Person)-[:HAS_CONTACT*1..10]->(p2:Person)) // min..max
-WHERE p1 <> p2
-RETURN p1, nodes(path) AS path_nodes, relationships(path) AS path_rels, path, p2
-LIMIT 25; // Must to avoid the infinite loop
+WHERE p1 <> p2 // Infinite loop, check 1
+RETURN p1, path, nodes(path) AS path_nodes, relationships(path) AS path_rels, length(path) AS path_length, p2
+LIMIT 25; // Infinite loop, check 2
 
-// FOR PATH LENGTH: 
-MATCH path = ((p1:Person)-[:HAS_CONTACT*1..10]->(p2:Person)) // min..max
+// SHORTEST_PATH AND ALL_SHORTEST_PATHS: 
+MERGE (p1:Person {name: "A"})-[:HAS_CONTACT {via: "XYZ"}]->(p2:Person {name: "B"})
+WITH p1, p2
+MATCH path = shortestPath((p1)-[:HAS_CONTACT*1..10]->(p2)) // ..max, needed for SP's
 WHERE p1 <> p2
-RETURN length(path) AS path_length
-LIMIT 25; // Must to avoid the infinite loop
+RETURN p1, path, length(path) AS path_length, p2;
 
-// SHORTEST PATH: 
-MATCH path = allShortestPath((p1:Person)-[*..10]->(p2:Person)) // ..max, needed for SP's
+MERGE (p1:Person {name: "A"})-[:HAS_CONTACT {via: "XYZ"}]->(p2:Person {name: "B"})
+WITH p1, p2
+MATCH path = allShortestPaths((p1)-[:HAS_CONTACT*1..10]->(p2)) // ..max, needed for SP's
 WHERE p1 <> p2
-RETURN p1, path, p2, length(path) AS path_length
+RETURN p1, path, length(path) AS path_length, p2
 ORDER BY path_length
-LIMIT 1;
+LIMIT 5;
 /////////////////////////////////////////////////////////////////
 

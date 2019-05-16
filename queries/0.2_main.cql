@@ -2,7 +2,7 @@
 :help cypher
 
 // RETURNING NEO4J SERVER CREDENTIALS:
-:server switch success;
+:server status;
 
 // RETURN ENTIRE GRAPH W/O LIMIT:
 MATCH (anything)
