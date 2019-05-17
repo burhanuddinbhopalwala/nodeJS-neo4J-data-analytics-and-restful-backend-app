@@ -29,23 +29,10 @@ module.exports = {
   city_radius: "float",
   flow_id: "integer",
 
-  has_many_jns: {
+  has_many_journey_nodes: {
     type: "relationship",
     relationship: "START",
     direction: "out",
-    target: "JourneyNode",
-    eager: true,
-    properties: {
-      start_node_id: "integer",
-      end_node_id: "integer",
-      journey_id: "integer",
-      leg_no: "integer"
-    }
-  },
-  belongs_to_jns: {
-    type: "relationship",
-    relationship: "END",
-    direction: "in",
     target: "JourneyNode",
     eager: true,
     properties: {

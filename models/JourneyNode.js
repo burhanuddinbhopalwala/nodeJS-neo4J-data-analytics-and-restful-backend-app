@@ -43,19 +43,20 @@ module.exports = {
     properties: {
       start_node_id: "integer",
       end_node_id: "integer",
+      journey_id: "integer",
       leg_no: "integer"
     }
   },
-  belong_to_node: {
+  has_many_shipments: {
     type: "relationship",
-    relationship: "START",
+    relationship: "HAVING",
     direction: "out",
-    target: "Node",
+    target: "Shipment",
     eager: true,
     properties: {
       start_node_id: "integer",
       end_node_id: "integer",
-      leg_no: "integer"
+      shipment_id: "integer"
     }
   }
 };

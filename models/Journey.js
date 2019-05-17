@@ -15,7 +15,6 @@ module.exports = {
     required: true,
     indexed: true
   },
-
   transport_mode: "integer",
   transporter_name: "string",
   lr_no: {
@@ -55,7 +54,7 @@ module.exports = {
   },
   flow_id: "integer",
 
-  has_one_jn: {
+  has_one_journey_node: {
     type: "relationship",
     relationship: "FROM",
     direction: "out",
@@ -67,7 +66,7 @@ module.exports = {
       sequence_no: "integer"
     }
   },
-  has_one_jn: {
+  has_one_journey_node: {
     type: "relationship",
     relationship: "TO",
     direction: "out",

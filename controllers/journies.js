@@ -8,7 +8,7 @@ const [driver, session] = require(path.join(
 )).getNeo4JCredentials;
 
 module.exports.getJourneyById = (req, res, next) => {
-  const journeyId = parseInt(req.params.id);
+  const journeyId = +req.params.id;
   const query =
     "MATCH (j:Journey {id: $journeyId})-[:FROM]->(jn1:JourneyNode) MATCH (j)-[:TO]->(jn2:JourneyNode) MATCH path =(n_start:Node)-[:START]->(jn1)-[*]->(jn2)-[:END]->(n_end:Node) WITH NODES(path) AS nodes UNWIND nodes AS jns WITH jns WHERE 'JourneyNode' IN LABELS(jns) MATCH path2 = (jns)-[:HAVING]->() MATCH path1 = ()-[:START]->(jns)-[:END]->() RETURN path1, path2;";
 

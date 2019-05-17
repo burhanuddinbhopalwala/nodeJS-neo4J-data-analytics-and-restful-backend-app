@@ -27,18 +27,5 @@ module.exports = {
   deleted_at: "datetime",
   material: "string",
   quantity: "integer",
-  flow_id: "integer",
-
-  belongs_to_jns: {
-    type: "relationship",
-    relationship: "HAVING",
-    direction: "in",
-    target: "JourneyNode",
-    eager: true,
-    properties: {
-      start_node_id: "integer",
-      end_node_id: "integer",
-      shipment_id: "integer"
-    }
-  }
+  flow_id: "integer"
 };
