@@ -11,6 +11,7 @@ const journiesController = require(path.join(
   "journies.js"
 ));
 
+// GET /journies/:id
 router.get("/:id", journiesController.getJourneyById);
 
 module.exports = router;

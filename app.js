@@ -3,25 +3,40 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const app = express();
-const PORT = process.env.PORT || 3500;
-
-const journeyRoutes = require(path.join(__dirname, "routes", "journies.js"));
-const shipmentRoutes = require(path.join(__dirname, "routes", "shipments.js"));
+const nodesRoutes = require(path.join(__dirname, "routes", "nodes.js"));
+const journiesRoutes = require(path.join(__dirname, "routes", "journies.js"));
+const shipmentsRoutes = require(path.join(__dirname, "routes", "shipments.js"));
+const journeyNodesRoutes = require(path.join(
+  __dirname,
+  "routes",
+  "journey_nodes.js"
+));
 const errorController = require(path.join(
   __dirname,
   "controllers",
   "error.js"
 ));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false })); // For space, %20s problem
+const app = express();
+const PORT = process.env.PORT || 3500;
 
-app.use("/journey", journeyRoutes);
-app.use("/shipment", shipmentRoutes);
-app.use((error, req, res, next) => {
-  if (error.httpStatusCode === 500) errorController.get500(req, res, next);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
 });
-app.use(errorController.get404);
+
+app.use("/nodes", nodesRoutes);
+app.use("/journies", journiesRoutes);
+app.use("/shipments", shipmentsRoutes);
+app.use("/journey_nodes", journeyNodesRoutes);
+app.use(errorController.throwError);
+app.use(errorController.throw404);
 
 app.listen(PORT, () => console.log("Neo4j started listening on port 3500..."));

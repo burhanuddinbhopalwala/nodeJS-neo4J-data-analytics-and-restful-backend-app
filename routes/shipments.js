@@ -4,16 +4,17 @@ const express = require("express");
 
 const router = express.Router();
 
-const journiesController = require(path.join(
+const shipmentsController = require(path.join(
   __dirname,
   "..",
   "controllers",
   "shipments.js"
 ));
 
+// GET /shipments/total_transit_hours/:id
 router.get(
   "/total_transit_hours/:id",
-  journiesController.getShipmentTotalTransitTime
+  shipmentsController.getShipmentTotalTransitTime
 );
 
 module.exports = router;
