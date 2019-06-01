@@ -20,9 +20,8 @@ module.exports.getShipmentTotalTransitTime = async (req, res, next) => {
       throw error;
     }
     res.status(200).json({
-      success: true,
-      shipment_id: shipmentId,
-      value: +result.records[0]._fields[0].low
+      message: `Fetched successfully total transit time for shipment id: ${shipmentId}.`,
+      result: +result.records[0]._fields[0].low
     });
     driver.close();
   } catch (error) {

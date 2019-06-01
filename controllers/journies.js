@@ -19,7 +19,10 @@ module.exports.getJourneyById = async (req, res, next) => {
       error.statusCode = 401;
       throw error;
     }
-    res.status(200).json(result);
+    res.status(200).json({
+      message: `Fetched successfully journey for journey id: ${journeyId}.`,
+      result: +result.records[0]._fields[0].low
+    });
     driver.close();
   } catch (error) {
     if (!error.httpStatusCode) error.httpStatusCode = 500;
