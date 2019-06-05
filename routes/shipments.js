@@ -1,7 +1,7 @@
+"use strict";
 const path = require("path");
 
 const express = require("express");
-const { check, body } = require("express-validator/check");
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const shipmentsController = require(path.join(
   __dirname,
   "..",
   "controllers",
-  "shipments.js"
+  "shipments_controller.js"
 ));
 
 // GET /shipments/total_transit_hours/:id

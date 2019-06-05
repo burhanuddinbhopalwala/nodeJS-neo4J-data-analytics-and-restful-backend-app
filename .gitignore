@@ -1,5 +1,5 @@
 dump/*.sql
-config/*.js
+config/env.js
 node_modules/
 
 *.swp
@@ -8,9 +8,5 @@ node_modules/
 *.yml
 .keep
 .vscode
-nohup.out
 .DS_Store
-.ruby-gemset
-.ruby-version
-.byebug_history
 package-lock.json

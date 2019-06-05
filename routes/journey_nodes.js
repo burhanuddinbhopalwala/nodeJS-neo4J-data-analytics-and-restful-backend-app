@@ -1,8 +1,14 @@
+"use strict";
 const path = require("path");
 
 const express = require("express");
-const { check, body } = require("express-validator/check");
 
 const router = express.Router();
 
+const journeyNodesControllers = require(path.join(
+  __dirname,
+  "..",
+  "controllers",
+  "journey_nodes_controller.js"
+));
 module.exports = router;

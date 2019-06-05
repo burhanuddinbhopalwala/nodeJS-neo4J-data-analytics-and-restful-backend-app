@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "neo4j_app implementation",
   "main": "app.js",
+  "engines": {
+    "node": "10.9.0"
+  },
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node app.js",
+    "start-dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,7 +24,8 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.16.4",
-    "express-validator": "^5.3.1",
+    "helmet": "^3.18.0",
+    "morgan": "^1.9.1",
     "neo4j-driver": "^1.7.4"
   }
 }
