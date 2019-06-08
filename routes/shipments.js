@@ -9,12 +9,12 @@ const shipmentsController = require(path.join(
   __dirname,
   "..",
   "controllers",
-  "shipments_controller.js"
+  "shipmentsController.js"
 ));
 
-// GET /shipments/total_transit_hours/:id
+// GET /shipments/total_transit_hours/shipment_id
 router.get(
-  "/total_transit_hours/:id",
+  "/total_transit_hours/:shipment_id",
   shipmentsController.getShipmentTotalTransitTime
 );
 

@@ -14,12 +14,12 @@ const shipmentsRoutes = require(path.join(__dirname, "routes", "shipments.js"));
 const journeyNodesRoutes = require(path.join(
   __dirname,
   "routes",
-  "journey_nodes.js"
+  "journeyNodes.js"
 ));
 const errorController = require(path.join(
   __dirname,
   "controllers",
-  "errors_controller.js"
+  "errorsController.js"
 ));
 
 const app = express();
@@ -30,7 +30,7 @@ const accessLogStream = fs.createWriteStream(
 );
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use((req, res, next) => {

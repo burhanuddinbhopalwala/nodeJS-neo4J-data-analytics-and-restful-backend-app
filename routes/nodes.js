@@ -9,7 +9,7 @@ const nodesController = require(path.join(
   __dirname,
   "..",
   "controllers",
-  "nodes_controller"
+  "nodesController"
 ));
 
 module.exports = router;

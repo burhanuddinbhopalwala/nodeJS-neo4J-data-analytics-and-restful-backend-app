@@ -9,10 +9,10 @@ const journiesController = require(path.join(
   __dirname,
   "..",
   "controllers",
-  "journies_controller.js"
+  "journiesController.js"
 ));
 
-// GET /journies/:id
-router.get("/:id", journiesController.getJourneyById);
+// GET /journies/journey_id
+router.get("/:journey_id", journiesController.getJourneyById);
 
 module.exports = router;

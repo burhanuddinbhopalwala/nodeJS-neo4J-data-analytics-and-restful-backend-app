@@ -9,6 +9,6 @@ const journeyNodesControllers = require(path.join(
   __dirname,
   "..",
   "controllers",
-  "journey_nodes_controller.js"
+  "journeyNodesController.js"
 ));
 module.exports = router;
