@@ -5,7 +5,6 @@ node_modules/
 *.swp
 *.out 
 *.log 
-*.yml
 .keep
 .vscode
 .DS_Store
